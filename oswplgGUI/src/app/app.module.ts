@@ -19,6 +19,9 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { DishesListComponent } from './dishes-list/dishes-list.component';
 import { ContactComponent } from './contact/contact.component';
+import { DishesListItemComponent } from './dishes-list/dishes-list-item/dishes-list-item.component';
+import { IngredientsPipe } from './dishes-list/dishes-list-item/ingredients.pipe';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,10 @@ import { ContactComponent } from './contact/contact.component';
     AuthComponent,
     LoadingSpinnerComponent,
     DishesListComponent,
-    ContactComponent
+    ContactComponent,
+    DishesListItemComponent,
+    IngredientsPipe,
+    CartComponent
   ],
   imports: [
     BrowserModule,
