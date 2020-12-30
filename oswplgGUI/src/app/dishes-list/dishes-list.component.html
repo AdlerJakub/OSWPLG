@@ -1,1 +1,7 @@
-<p>dishes-list works!</p>
+<div class="row">
+  <div class="col">
+    <app-dishes-list-item
+      *ngFor="let el of dishes; let i = index"
+      [dish]="el"></app-dishes-list-item>
+  </div>
+</div>
