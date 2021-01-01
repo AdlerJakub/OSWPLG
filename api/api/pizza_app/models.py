@@ -5,11 +5,11 @@ from django.urls import reverse
 
 
 class Dish(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
-    ingredients = models.JSONField()
-    price = models.IntegerField()
-    description = models.TextField()
+    ingredients = models.JSONField(blank=True, null=True)
+    price = models.FloatField()
+    description = models.TextField(blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse('dish_detail', args=[self.id])
