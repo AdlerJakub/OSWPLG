@@ -10,11 +10,17 @@ import { AuthComponent } from './auth/auth.component';
 import { AuthGuard } from './auth/auth.guard';
 import {DishesListComponent} from './dishes-list/dishes-list.component';
 import {ContactComponent} from './contact/contact.component';
+import {CartComponent} from './cart/cart.component';
+import {OrderCredentialsComponent} from './order-credentials/order-credentials.component';
+import {OrderSummaryComponent} from './order-summary/order-summary.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/dishes-list', pathMatch: 'full' },
   { path: 'dishes-list', component: DishesListComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'cart', component: CartComponent },
+  { path: 'orderCredentials', component: OrderCredentialsComponent },
+  { path: 'orderSummary', component: OrderSummaryComponent },
   {
     path: 'dishes',
     component: RecipesComponent,

@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CartService} from './cart.service';
+import {Dish} from '../dishes-list/dish.model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -6,10 +9,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
+  cartContent: Dish[];
 
-  constructor() { }
+  constructor(private cartService: CartService, private router: Router) {
+  }
 
   ngOnInit() {
+    this.cartContent = this.cartService.getCartContent();
+  }
+
+  buy() {
+    this.router.navigate(['orderCredentials']);
   }
 
 }

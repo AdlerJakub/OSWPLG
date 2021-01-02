@@ -1,1 +1,19 @@
-<p>cart works!</p>
+<div class="row">
+  <div class="pull-left">
+    <h3>Koszyk</h3>
+  </div>
+  <span class="pull-right" *ngIf="cartContent.length !== 0">
+    <button class="btn btn-primary" (click)="buy()">Do kasy!</button>
+  </span>
+</div>
+<hr>
+<div class="row">
+  <div class="col">
+    <div class="alert alert-info" *ngIf="cartContent.length === 0">
+      <p>Koszyk jest pusty!</p>
+    </div>
+    <app-cart-item
+      *ngFor="let el of cartContent;"
+      [dish]="el"></app-cart-item>
+  </div>
+</div>

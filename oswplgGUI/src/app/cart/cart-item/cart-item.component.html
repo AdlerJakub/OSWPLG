@@ -1,0 +1,18 @@
+<a
+  style="cursor: pointer;"
+  class="list-group-item clearfix">
+  <div class="pull-left">
+    <h3 class="list-group-item-heading">{{ dish.name }}</h3>
+    <span class="list-group-item-text">{{ dish.description }}</span>
+    <span class="list-group-item-text">{{ dish.ingredients | ingredients }}</span>
+  </div>
+  <span class="pull-right" style="padding-top: 10px">
+    <div class="form-inline">
+    <h4>{{ dish.price }} zł </h4>
+
+    <button class="btn btn-primary form-control" (click)="onRemoveFromCart()">
+      Usuń z koszyka <i class="material-icons">remove_shopping_cart</i>
+    </button>
+    </div>
+  </span>
+</a>
