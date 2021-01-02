@@ -22,6 +22,10 @@ import { ContactComponent } from './contact/contact.component';
 import { DishesListItemComponent } from './dishes-list/dishes-list-item/dishes-list-item.component';
 import { IngredientsPipe } from './dishes-list/dishes-list-item/ingredients.pipe';
 import { CartComponent } from './cart/cart.component';
+import { CartItemComponent } from './cart/cart-item/cart-item.component';
+import { OrderCredentialsComponent } from './order-credentials/order-credentials.component';
+import { OrderSummaryComponent } from './order-summary/order-summary.component';
+import { OrderSummaryItemComponent } from './order-summary/order-summary-item/order-summary-item.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,11 @@ import { CartComponent } from './cart/cart.component';
     ContactComponent,
     DishesListItemComponent,
     IngredientsPipe,
-    CartComponent
+    CartComponent,
+    CartItemComponent,
+    OrderCredentialsComponent,
+    OrderSummaryComponent,
+    OrderSummaryItemComponent
   ],
   imports: [
     BrowserModule,

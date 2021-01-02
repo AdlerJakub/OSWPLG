@@ -15,4 +15,14 @@ export class CartService {
       this.cartContent.push(dishToAdd);
     }
   }
+
+  removeFromCart(dishToRemove: Dish) {
+    this.cartContent.splice(this.cartContent.findIndex((val) => {
+      return val.id === dishToRemove.id;
+    }), 1);
+  }
+
+  getCartContent(): Dish[] {
+    return this.cartContent;
+  }
 }
