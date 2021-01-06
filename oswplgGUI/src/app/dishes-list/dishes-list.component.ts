@@ -10,14 +10,15 @@ import {Dish} from './dish.model';
 })
 export class DishesListComponent implements OnInit, OnDestroy {
 
-  dishes: Dish[];
+  dishes: Dish[] = [];
 
 
   constructor(private dishesListService: DishesListService) { }
 
   ngOnInit() {
-//    this.recipes = this.recipeService.getRecipes();
-    this.dishes = [new Dish(1, 'pizza podstawowa', ['ciasto', 'sos', 'ser'], 123)];
+    this.dishesListService.getDishes().subscribe((res) => {
+      this.dishes = res;
+    });
   }
 
   ngOnDestroy() {
