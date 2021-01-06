@@ -1,11 +1,16 @@
 from django.contrib.auth.models import User
-from rest_framework import viewsets, status
+from django.http import Http404
+from rest_framework import viewsets, status, mixins
 from rest_framework import generics, permissions
+from rest_framework.decorators import action
+from rest_framework.mixins import RetrieveModelMixin, CreateModelMixin
 from rest_framework.permissions import AllowAny, BasePermission
+from rest_framework.request import clone_request
 from rest_framework.response import Response
 
-from api.pizza_app.models import Dish
-from api.pizza_app.serializers import UserSerializer, RegisterSerializer, DishSerializer
+from api.pizza_app.models import Dish, Order
+from api.pizza_app.serializers import UserSerializer, RegisterSerializer, DishSerializer, OrderSerializer
+from rest_framework.viewsets import GenericViewSet
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -33,6 +38,77 @@ class UserViewSet(viewsets.ModelViewSet):
 #         )
 
 
+class OrderViewSet(mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   GenericViewSet):
+    serializer_class = OrderSerializer
+    permission_classes = [AllowAny]
+    queryset = Order.objects.all()
+    #
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class AdminOrderViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Order.objects.all().order_by('id')
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_object_or_none(self):
+        try:
+            return self.get_object()
+        except Http404:
+            if self.request.method == 'PUT':
+                self.check_permissions(clone_request(self.request, 'POST'))
+            else:
+                raise
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object_or_none()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        if instance is None:
+            lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+            lookup_value = self.kwargs[lookup_url_kwarg]
+            extra_kwargs = {self.lookup_field: lookup_value}
+            serializer.save(**extra_kwargs)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        serializer.save()
+        return Response(serializer.data)
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
 class DishViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
@@ -47,6 +123,49 @@ class DishViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_object_or_none(self):
+        try:
+            return self.get_object()
+        except Http404:
+            if self.request.method == 'PUT':
+                # For PUT-as-create operation, we need to ensure that we have
+                # relevant permissions, as if this was a POST request.  This
+                # will either raise a PermissionDenied exception, or simply
+                # return None.
+                self.check_permissions(clone_request(self.request, 'POST'))
+            else:
+                # PATCH requests where the object does not exist should still
+                # return a 404 response.
+                raise
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object_or_none()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        if instance is None:
+            lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+            lookup_value = self.kwargs[lookup_url_kwarg]
+            extra_kwargs = {self.lookup_field: lookup_value}
+            serializer.save(**extra_kwargs)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        serializer.save()
+        return Response(serializer.data)
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save()
