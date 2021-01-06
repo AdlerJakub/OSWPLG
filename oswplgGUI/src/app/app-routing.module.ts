@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { RecipesComponent } from './recipes/recipes.component';
-import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
-import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
-import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
-import { RecipesResolverService } from './recipes/recipes-resolver.service';
+import { DishesEditComponent } from './dishes-edit/dishes-edit.component';
+import { DishStartComponent } from './dishes-edit/dish-start/dish-start.component';
+import { DishDetailComponent } from './dishes-edit/dish-detail/dish-detail.component';
+import { DishEditComponent } from './dishes-edit/dish-edit/dish-edit.component';
+import { DishesResolverService } from './dishes-edit/dishes-resolver.service';
 import { AuthComponent } from './auth/auth.component';
 import { AuthGuard } from './auth/auth.guard';
 import {DishesListComponent} from './dishes-list/dishes-list.component';
@@ -23,20 +23,20 @@ const appRoutes: Routes = [
   { path: 'orderSummary', component: OrderSummaryComponent },
   {
     path: 'dishes',
-    component: RecipesComponent,
+    component: DishesEditComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: RecipeStartComponent },
-      { path: 'new', component: RecipeEditComponent },
+      { path: '', component: DishStartComponent },
+      { path: 'new', component: DishEditComponent },
       {
         path: ':id',
-        component: RecipeDetailComponent,
-        resolve: [RecipesResolverService]
+        component: DishDetailComponent,
+        resolve: [DishesResolverService]
       },
       {
         path: ':id/edit',
-        component: RecipeEditComponent,
-        resolve: [RecipesResolverService]
+        component: DishEditComponent,
+        resolve: [DishesResolverService]
       }
     ]
   },

@@ -1,69 +1,52 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { catchError, tap } from 'rxjs/operators';
-import { throwError, BehaviorSubject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {catchError, tap} from 'rxjs/operators';
+import {throwError, BehaviorSubject} from 'rxjs';
 
-import { User } from './user.model';
+import {User} from './models/user.model';
+import {LoginResponseModel} from './models/login-response.model';
+import {SignupResponseModel} from './models/signup-response.model';
 
-export interface AuthResponseData {
-  kind: string;
-  idToken: string;
-  email: string;
-  refreshToken: string;
-  expiresIn: string;
-  localId: string;
-  registered?: boolean;
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthService {
   user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+  }
 
-  signup(email: string, password: string) {
+  signup(email: string, username: string, password: string) {
     return this.http
-      .post<AuthResponseData>(
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBmJ08QfawbFh5nhE6O1Ix5RL5g-tmh_4Q',
+      .post<SignupResponseModel>(
+        '/api/signup/',
         {
-          email: email,
-          password: password,
-          returnSecureToken: true
+          email,
+          username,
+          password,
         }
       )
       .pipe(
-        catchError(this.handleError),
-        tap(resData => {
-          this.handleAuthentication(
-            resData.email,
-            resData.localId,
-            resData.idToken,
-            +resData.expiresIn
-          );
-        })
+        catchError(this.handleError)
       );
   }
 
-  login(email: string, password: string) {
+  login(username: string, password: string) {
     return this.http
-      .post<AuthResponseData>(
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyBmJ08QfawbFh5nhE6O1Ix5RL5g-tmh_4Q',
+      .post<LoginResponseModel>(
+        '/api/login/',
         {
-          email: email,
-          password: password,
-          returnSecureToken: true
+          username,
+          password
         }
       )
       .pipe(
         catchError(this.handleError),
         tap(resData => {
           this.handleAuthentication(
-            resData.email,
-            resData.localId,
-            resData.idToken,
-            +resData.expiresIn
+            username,
+            resData.access,
+            3600
           );
         })
       );
@@ -71,8 +54,7 @@ export class AuthService {
 
   autoLogin() {
     const userData: {
-      email: string;
-      id: string;
+      username: string;
       _token: string;
       _tokenExpirationDate: string;
     } = JSON.parse(localStorage.getItem('userData'));
@@ -81,8 +63,7 @@ export class AuthService {
     }
 
     const loadedUser = new User(
-      userData.email,
-      userData.id,
+      userData.username,
       userData._token,
       new Date(userData._tokenExpirationDate)
     );
@@ -113,34 +94,37 @@ export class AuthService {
   }
 
   private handleAuthentication(
-    email: string,
-    userId: string,
+    username: string,
     token: string,
     expiresIn: number
   ) {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-    const user = new User(email, userId, token, expirationDate);
+    const user = new User(username, token, expirationDate);
     this.user.next(user);
     this.autoLogout(expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));
   }
 
   private handleError(errorRes: HttpErrorResponse) {
+    console.log(errorRes);
     let errorMessage = 'An unknown error occurred!';
-    if (!errorRes.error || !errorRes.error.error) {
+    if (!errorRes.error) {
       return throwError(errorMessage);
     }
-    switch (errorRes.error.error.message) {
-      case 'EMAIL_EXISTS':
-        errorMessage = 'This email exists already';
-        break;
-      case 'EMAIL_NOT_FOUND':
-        errorMessage = 'This email does not exist.';
-        break;
-      case 'INVALID_PASSWORD':
-        errorMessage = 'This password is not correct.';
-        break;
+    if (errorRes.error.detail) {
+      switch (errorRes.error.detail) {
+        case 'No active account found with the given credentials':
+          errorMessage = 'Błędny login lub hasło!';
+          break;
+      }
+    } else {
+      switch (errorRes.error.username[0]) {
+        case 'A user with that username already exists.':
+          errorMessage = 'Użytkownik o tej nazwie już istnieje!';
+          break;
+      }
     }
+
     return throwError(errorMessage);
   }
 }

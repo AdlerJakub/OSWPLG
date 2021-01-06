@@ -5,15 +5,15 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { RecipesComponent } from './recipes/recipes.component';
-import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
-import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
-import { RecipeItemComponent } from './recipes/recipe-list/recipe-item/recipe-item.component';
+import { DishesEditComponent } from './dishes-edit/dishes-edit.component';
+import { DishListEditComponent } from './dishes-edit/dish-list-edit/dish-list-edit.component';
+import { DishDetailComponent } from './dishes-edit/dish-detail/dish-detail.component';
+import { DishListEditItemComponent } from './dishes-edit/dish-list-edit/dish-list-edit-item/dish-list-edit-item.component';
 import { DropdownDirective } from './shared/dropdown.directive';
 import { AppRoutingModule } from './app-routing.module';
-import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
-import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
-import { RecipeService } from './recipes/recipe.service';
+import { DishStartComponent } from './dishes-edit/dish-start/dish-start.component';
+import { DishEditComponent } from './dishes-edit/dish-edit/dish-edit.component';
+import { DishesService } from './dishes-edit/dishes.service';
 import { AuthComponent } from './auth/auth.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
@@ -31,13 +31,13 @@ import { OrderSummaryItemComponent } from './order-summary/order-summary-item/or
   declarations: [
     AppComponent,
     HeaderComponent,
-    RecipesComponent,
-    RecipeListComponent,
-    RecipeDetailComponent,
-    RecipeItemComponent,
+    DishesEditComponent,
+    DishListEditComponent,
+    DishDetailComponent,
+    DishListEditItemComponent,
     DropdownDirective,
-    RecipeStartComponent,
-    RecipeEditComponent,
+    DishStartComponent,
+    DishEditComponent,
     AuthComponent,
     LoadingSpinnerComponent,
     DishesListComponent,
@@ -58,7 +58,7 @@ import { OrderSummaryItemComponent } from './order-summary/order-summary-item/or
     AppRoutingModule
   ],
   providers: [
-    RecipeService,
+    DishesService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
