@@ -1,5 +1,9 @@
+
 from django.contrib.auth.models import User
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.http import Http404
+from django.template import Template, Context
+from django.template.loader import get_template
 from rest_framework import viewsets, status, mixins
 from rest_framework import generics, permissions
 from rest_framework.decorators import action
@@ -11,6 +15,8 @@ from rest_framework.response import Response
 from api.pizza_app.models import Dish, Order
 from api.pizza_app.serializers import UserSerializer, RegisterSerializer, DishSerializer, OrderSerializer
 from rest_framework.viewsets import GenericViewSet
+
+from api import settings
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -44,12 +50,23 @@ class OrderViewSet(mixins.CreateModelMixin,
     serializer_class = OrderSerializer
     permission_classes = [AllowAny]
     queryset = Order.objects.all()
+
     #
     def create(self, request, *args, **kwargs):
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        model = serializer.save()
         headers = self.get_success_headers(serializer.data)
+
+        template = Template('Witaj zaczelismy robic twoja pizze!!!\nDokładne informacje znajdziesz na {{detail}}')
+        context = Context({"detail": 'http://localhost:4200/orderDetails/' + str(model.id)})
+
+        send_mail('Pizza - Zamowienie',
+                  template.render(context),
+                  settings.EMAIL_HOST_USER,
+                  [model.credentials.email])
+
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
