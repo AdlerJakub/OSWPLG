@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import datetime
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,7 +28,17 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'desk11233@gmail.com'
+EMAIL_HOST_PASSWORD = 'czjbnmawejleqwns'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'desk11233@gmail.com'
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
+TEMPLATE_DIRS = [
+    os.path.join(PROJECT_PATH, 'templates/'),
+]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,7 +76,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'api.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

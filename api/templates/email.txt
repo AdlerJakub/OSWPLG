@@ -1,0 +1,2 @@
+Witaj zaczelismy robic twoja pizze!!!
+Dokładne informacje znajdziesz na {{detail}}
