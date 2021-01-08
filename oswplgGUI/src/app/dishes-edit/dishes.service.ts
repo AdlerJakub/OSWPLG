@@ -27,7 +27,7 @@ export class DishesService {
   private fetchDishes(): Observable<Dish[]> {
     return this.http
       .get<any>(
-        '/dishes/'
+        '/api/dishes/'
       )
       .pipe(
         map(res => {
@@ -43,7 +43,7 @@ export class DishesService {
   }
 
   addRecipe(recipe: Dish): Observable<Dish> {
-    return this.http.post<Dish>('/dishes/', recipe).pipe(
+    return this.http.post<Dish>('/api/dishes/', recipe).pipe(
       tap((val) => {
           recipe.id = val.id;
           this.dishes.push(recipe);
@@ -59,7 +59,7 @@ export class DishesService {
     })] = newRecipe;
     this.dishesChanged.next(this.dishes.slice());
 
-    return this.http.put<Dish>('/dishes/' + index + '/', newRecipe);
+    return this.http.put<Dish>('/api/dishes/' + index + '/', newRecipe);
   }
 
   deleteRecipe(index: number): Observable<Dish> {
