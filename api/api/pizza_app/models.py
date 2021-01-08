@@ -17,22 +17,24 @@ class Dish(models.Model):
 
 class OrderCredentials(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, unique=True)
-    surname = models.CharField(max_length=255, unique=True)
-    street = models.CharField(max_length=255, unique=True)
-    houseNumber = models.CharField(max_length=255, unique=True)
-    flatNumber = models.CharField(max_length=255, unique=True)
-    phoneNumber = models.CharField(max_length=255, unique=True)
-    email = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    street = models.CharField(max_length=255)
+    houseNumber = models.CharField(max_length=255)
+    flatNumber = models.CharField(max_length=255)
+    phoneNumber = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
+    zipCode = models.CharField(max_length=255)
 
     def get_absolute_url(self):
         return reverse('order_credentials_detail', args=[self.id])
 
+
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     realized = models.IntegerField()
-    dishes = models.ForeignKey(Dish, on_delete=models.CASCADE)
-    credentials = models.OneToOneField(OrderCredentials, on_delete=models.CASCADE)
+    dishes = models.ManyToManyField(Dish)
+    credentials = models.OneToOneField(OrderCredentials, on_delete=models.CASCADE, blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse('order_detail', args=[self.id])
