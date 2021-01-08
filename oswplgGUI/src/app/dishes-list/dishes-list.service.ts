@@ -16,7 +16,7 @@ export class DishesListService implements OnInit{
   }
 
   getDishes(): Observable<Dish[]> {
-    return this.http.get<any>('/dishes/').pipe(
+    return this.http.get<any>('/api/dishes/').pipe(
       map((res) => {
         return res.results;
       })
