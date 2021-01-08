@@ -1,4 +1,3 @@
-
 from django.contrib.auth.models import User
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.http import Http404
@@ -43,7 +42,6 @@ class UserViewSet(viewsets.ModelViewSet):
 #             request.user.is_authenticated
 #         )
 
-
 class OrderViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    GenericViewSet):
@@ -53,7 +51,6 @@ class OrderViewSet(mixins.CreateModelMixin,
 
     #
     def create(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         model = serializer.save()
@@ -78,12 +75,30 @@ class AdminOrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        only_missing = str(self.request.query_params.get('not_realized')).lower()
+        if only_missing in ['true', '1']:
+            return qs.filter(realized=False)
+        return qs
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    # def list_not_realized(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset().filter(realized=0))
+    #
+    #     page = self.paginate_queryset(queryset)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True)
+    #         return self.get_paginated_response(serializer.data)
+    #
+    #     serializer = self.get_serializer(queryset, many=True)
+    #     return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         try:
