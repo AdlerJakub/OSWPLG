@@ -13,6 +13,8 @@ import {ContactComponent} from './contact/contact.component';
 import {CartComponent} from './cart/cart.component';
 import {OrderCredentialsComponent} from './order-credentials/order-credentials.component';
 import {OrderSummaryComponent} from './order-summary/order-summary.component';
+import {OrderStatusComponent} from './order-status/order-status.component';
+import {OrderHistoryComponent} from './order-history/order-history.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/dishes-list', pathMatch: 'full' },
@@ -21,6 +23,23 @@ const appRoutes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'orderCredentials', component: OrderCredentialsComponent },
   { path: 'orderSummary', component: OrderSummaryComponent },
+  {
+    path: 'orderStatus',
+    component: OrderStatusComponent,
+    children: [
+      { path: '', redirectTo: '', pathMatch: 'full' },
+      {
+        path: ':id',
+        component: OrderStatusComponent,
+        resolve: [DishesResolverService]
+      }
+    ]
+  },
+  {
+    path: 'orderHistory',
+    component: OrderHistoryComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: 'dishes',
     component: DishesEditComponent,

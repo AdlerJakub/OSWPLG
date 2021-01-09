@@ -1,7 +1,7 @@
 <h4>Dane zamawiającego</h4>
 <div class="container">
   <div class="row">
-    <form [formGroup]="credentialsForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="credentialsForm">
       <div class="row">
         <div class="col-sm-3">
           <label for="name">Imię:</label>
@@ -49,6 +49,17 @@
           <input type="text" id="email" formControlName="email" class="form-control">
         </div>
       </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="checkbox-inline">
+            <label for="realized">
+              Czy zamówienie zrealizowano: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </label>
+            <input type="checkbox" id="realized" formControlName="realized">
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 </div>
@@ -58,6 +69,5 @@
 <app-order-summary-item
   *ngFor="let el of cartContent;"
   [dish]="el"></app-order-summary-item>
-<br>
-<button class="btn btn-success" (click)="order()">Zmówienie z obowiązkiem zapłaty!</button>
+
 
