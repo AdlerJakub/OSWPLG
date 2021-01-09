@@ -57,7 +57,7 @@ class OrderViewSet(mixins.CreateModelMixin,
         headers = self.get_success_headers(serializer.data)
 
         template = Template('Witaj zaczelismy robic twoja pizze!!!\nDokładne informacje znajdziesz na {{detail}}')
-        context = Context({"detail": 'http://localhost:4200/orderDetails/' + str(model.id)})
+        context = Context({"detail": 'http://localhost:4200/orderStatus/' + str(model.id)})
 
         send_mail('Pizza - Zamowienie',
                   template.render(context),
