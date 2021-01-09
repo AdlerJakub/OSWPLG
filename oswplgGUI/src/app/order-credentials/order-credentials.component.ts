@@ -30,6 +30,8 @@ export class OrderCredentialsComponent implements OnInit {
     const street = '';
     const houseNumber = '';
     const flatNumber = '';
+    const city = '';
+    const zipCode = '';
     const phoneNumber = '';
     const email = '';
 
@@ -39,6 +41,8 @@ export class OrderCredentialsComponent implements OnInit {
       street: new FormControl(street, Validators.required),
       houseNumber: new FormControl(houseNumber, [Validators.required, Validators.pattern('[0-9]+([a-z]|[A-Z])?')]),
       flatNumber: new FormControl(flatNumber, [Validators.pattern('[0-9]+')]),
+      city: new FormControl(city, [Validators.required]),
+      zipCode: new FormControl(zipCode, [Validators.required]),
       phoneNumber: new FormControl(phoneNumber, [Validators.required, Validators.pattern('[0-9]{3}-[0-9]{3}-[0-9]{3}')]),
       email: new FormControl(email, [Validators.required, Validators.email])
     });

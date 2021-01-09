@@ -12,9 +12,6 @@
         <li routerLinkActive="active">
           <a routerLink="/contact">Kontakt</a>
         </li>
-        <li routerLinkActive="active" *ngIf="isAuthenticated">
-          <a routerLink="/dishes">Edytuj menu</a>
-        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li routerLinkActive="active">
@@ -25,6 +22,12 @@
             >Administrator <span class="caret"></span
           ></a>
           <ul class="dropdown-menu">
+            <li routerLinkActive="active" *ngIf="isAuthenticated">
+              <a routerLink="/dishes">Edytuj menu</a>
+            </li>
+            <li routerLinkActive="active" *ngIf="isAuthenticated">
+              <a routerLink="/orderHistory">Historia zamówień</a>
+            </li>
             <li routerLinkActive="active" *ngIf="!isAuthenticated">
               <a routerLink="/auth">Zaloguj</a>
             </li>

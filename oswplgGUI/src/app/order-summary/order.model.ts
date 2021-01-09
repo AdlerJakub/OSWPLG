@@ -4,5 +4,5 @@ import {OrderCredentialsModel} from '../order-credentials/order-credentials.mode
 export class Order {
   dishes: Dish[];
   credentials: OrderCredentialsModel;
-  isRealized = false;
+  realized = 0; // 0 to false, 1 to true
 }

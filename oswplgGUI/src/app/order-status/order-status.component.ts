@@ -1,39 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import {OrderCredentialsService} from '../order-credentials/order-credentials.service';
-import {CartService} from '../cart/cart.service';
+import {Component, OnInit} from '@angular/core';
 import {OrderCredentialsModel} from '../order-credentials/order-credentials.model';
 import {Dish} from '../dishes-list/dish.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {OrderSummaryService} from './order-summary.service';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {OrderStatusService} from './order-status.service';
 
 @Component({
-  selector: 'app-order-summary',
-  templateUrl: './order-summary.component.html',
-  styleUrls: ['./order-summary.component.css']
+  selector: 'app-order-status',
+  templateUrl: './order-status.component.html',
+  styleUrls: ['./order-status.component.css']
 })
-export class OrderSummaryComponent implements OnInit {
-  orderCredentials: OrderCredentialsModel;
-  cartContent: Dish[];
+export class OrderStatusComponent implements OnInit {
+  private orderCredentials: OrderCredentialsModel;
+  private cartContent: Dish[];
+  private realized: boolean;
   credentialsForm: FormGroup;
+  private id: number;
 
-  constructor(private orderCredentialsService: OrderCredentialsService,
-              private cartService: CartService,
-              private router: Router,
-              private orderSummaryService: OrderSummaryService) { }
-
-  ngOnInit() {
-    this.orderCredentials = this.orderCredentialsService.getOrderCredentials();
-    this.cartContent = this.cartService.getCartContent();
-    if (!this.orderCredentials || !this.cartContent) {
-      this.router.navigate(['dishes-list']);
-    }
-    this.initForm(this.orderCredentials);
+  constructor(
+    private route: ActivatedRoute,
+    private orderStatus: OrderStatusService,
+    private router: Router) {
   }
 
-  order() {
-    this.orderSummaryService.order(this.cartContent, this.orderCredentials);
-    this.router.navigate(['']);
+  ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      this.id = +params.id;
+      this.orderStatus.getOrder(this.id).subscribe((order) => {
+        this.orderCredentials = order.credentials;
+        this.cartContent = order.dishes;
+        this.realized = order.realized === 1 ? true : false;
+        if (!this.orderCredentials || !this.cartContent) {
+          this.router.navigate(['dishes-list']);
+        }
+        this.initForm(this.orderCredentials);
+      });
+    });
   }
 
   private initForm(credentials: OrderCredentialsModel) {
@@ -46,6 +48,7 @@ export class OrderSummaryComponent implements OnInit {
     const zipCode = credentials.zipCode;
     const phoneNumber = credentials.phoneNumber;
     const email = credentials.email;
+    const realized = this.realized;
 
     this.credentialsForm = new FormGroup({
       name: new FormControl(name, Validators.required),
@@ -56,7 +59,8 @@ export class OrderSummaryComponent implements OnInit {
       city: new FormControl(city, [Validators.required]),
       zipCode: new FormControl(zipCode, [Validators.required]),
       phoneNumber: new FormControl(phoneNumber, [Validators.required, Validators.pattern('[0-9]{3}-[0-9]{3}-[0-9]{3}')]),
-      email: new FormControl(email, [Validators.required, Validators.email])
+      email: new FormControl(email, [Validators.required, Validators.email]),
+      realized: new FormControl(realized)
     });
     this.credentialsForm.disable();
   }

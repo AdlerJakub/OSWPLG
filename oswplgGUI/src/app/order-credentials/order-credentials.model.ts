@@ -4,6 +4,8 @@ export class OrderCredentialsModel {
   street: string;
   houseNumber: string;
   flatNumber: string;
+  city: string;
+  zipCode: string;
   phoneNumber: string;
   email: string;
 }

@@ -26,6 +26,10 @@ import { CartItemComponent } from './cart/cart-item/cart-item.component';
 import { OrderCredentialsComponent } from './order-credentials/order-credentials.component';
 import { OrderSummaryComponent } from './order-summary/order-summary.component';
 import { OrderSummaryItemComponent } from './order-summary/order-summary-item/order-summary-item.component';
+import { OrderStatusComponent } from './order-status/order-status.component';
+import { OrderHistoryComponent } from './order-history/order-history.component';
+import { AddressPipe } from './shared/address.pipe';
+import { PricesSumPipe } from './shared/prices-sum.pipe';
 
 @NgModule({
   declarations: [
@@ -48,7 +52,11 @@ import { OrderSummaryItemComponent } from './order-summary/order-summary-item/or
     CartItemComponent,
     OrderCredentialsComponent,
     OrderSummaryComponent,
-    OrderSummaryItemComponent
+    OrderSummaryItemComponent,
+    OrderStatusComponent,
+    OrderHistoryComponent,
+    AddressPipe,
+    PricesSumPipe
   ],
   imports: [
     BrowserModule,
