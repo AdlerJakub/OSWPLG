@@ -1,0 +1,22 @@
+<a
+  style="cursor: pointer;"
+  class="list-group-item clearfix">
+  <div class="pull-left">
+    <h3 class="list-group-item-heading">{{ dish.name }}</h3>
+    <span class="list-group-item-text">{{ dish.description }}</span>
+    <span class="list-group-item-text">{{ dish.ingredients | ingredients }}</span>
+  </div>
+  <span class="pull-right" style="padding-top: 10px">
+    <div class="form-inline">
+    <h4>{{ dish.price.toFixed(2) }} zł </h4>
+
+    <i class="material-icons form-control" (click)="onAdd()">add</i>
+    <input class="form-control" type="text" [(ngModel)]="count" size="1">
+    <i class="material-icons form-control" (click)="onSub()">remove</i>
+      &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-primary" (click)="addToCart()">
+      Dodaj do koszyka <i class="material-icons">add_shopping_cart</i>
+    </button>
+    </div>
+  </span>
+</a>

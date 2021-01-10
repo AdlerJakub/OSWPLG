@@ -1,0 +1,13 @@
+<a
+  style="cursor: pointer;"
+  [routerLink]="[ dish.id ]"
+  routerLinkActive="active"
+  class="list-group-item clearfix">
+  <div class="pull-left">
+    <h4 class="list-group-item-heading">{{ dish.name }}</h4>
+    <p class="list-group-item-text">{{ dish.description || (dish.ingredients | ingredients) }}</p>
+  </div>
+  <span class="pull-right">
+        <p class="list-group-item-text">{{ dish.price }} PLN</p>
+  </span>
+</a>

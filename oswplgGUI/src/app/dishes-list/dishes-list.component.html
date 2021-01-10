@@ -1,0 +1,9 @@
+<h3>Menu</h3>
+<hr>
+<div class="row">
+  <div class="col">
+    <app-dishes-list-item
+      *ngFor="let el of dishes; let i = index"
+      [dish]="el"></app-dishes-list-item>
+  </div>
+</div>

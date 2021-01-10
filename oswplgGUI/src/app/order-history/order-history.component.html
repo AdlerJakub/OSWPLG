@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-sm-2">
+    <button class="btn btn-primary" (click)="filterChanged()">{{buttonLabel}}</button>
+  </div>
+</div>
+<div class="row" *ngIf="orders && orders.length !== 0">
+  <div class="col-sm-12">
+    <br>
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Adres</th>
+          <th>Kwota</th>
+          <th>Szczegóły</th>
+          <th>Zarządzaj</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let el of orders">
+          <td>{{ el.id }}</td>
+          <td>{{ el.credentials | address }}</td>
+          <td>{{ el.dishes | pricesSum }} zł</td>
+          <td><button class="btn btn-default" (click)="redirectToDetails(el.id)">Szczegóły</button> </td>
+          <td><button class="btn btn-primary" (click)="realizeOrder(el.id)" *ngIf="el.realized == 0">Zrealizuj</button>
+              <p *ngIf="el.realized == 1">Zrealizowano</p>
+            <button class="btn btn-danger" (click)="deleteOrder(el.id)">Usuń</button>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+</div>
+
+<div class="row" *ngIf="orders.length === 0">
+  <div class="col-sm-12">
+    <br>
+    <div class="alert alert-info">
+      <p>Brak zamówień tego typu</p>
+    </div>
+  </div>
+</div>
+
