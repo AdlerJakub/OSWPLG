@@ -32,8 +32,9 @@ export class OrderSummaryComponent implements OnInit {
   }
 
   order() {
-    this.orderSummaryService.order(this.cartContent, this.orderCredentials);
-    this.router.navigate(['']);
+    this.orderSummaryService.order(this.cartContent, this.orderCredentials).subscribe((val) => {
+      this.router.navigate(['']);
+    });
   }
 
   private initForm(credentials: OrderCredentialsModel) {

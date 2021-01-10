@@ -35,7 +35,6 @@ export class DishDetailComponent implements OnInit {
 
   onDeleteRecipe() {
     this.dishesService.deleteRecipe(this.id).subscribe((val) => {
-      console.log(val);
       this.router.navigate(['/dishes']);
     });
   }

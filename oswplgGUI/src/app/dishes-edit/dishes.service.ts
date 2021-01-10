@@ -68,6 +68,6 @@ export class DishesService {
     }), 1);
     this.dishesChanged.next(this.dishes.slice());
 
-    return this.http.delete<Dish>('/dishes/' + index + '/');
+    return this.http.delete<Dish>('/api/dishes/' + index + '/');
   }
 }

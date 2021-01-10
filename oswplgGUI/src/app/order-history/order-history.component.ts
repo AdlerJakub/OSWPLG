@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Order} from '../order-summary/order.model';
+import {Router} from '@angular/router';
+import {OrderHistoryService} from './order-history.service';
 
 @Component({
   selector: 'app-order-history',
@@ -7,61 +9,57 @@ import {Order} from '../order-summary/order.model';
   styleUrls: ['./order-history.component.css']
 })
 export class OrderHistoryComponent implements OnInit {
-  orders: Order[] = [JSON.parse(`{
-    "credentials":
-      {
-        "city": "Siemianowice Śląskie",
-        "email": "jakuadl617@student.polsl.pl",
-        "flatNumber": "3",
-        "houseNumber": "2a",
-        "name": "Jan",
-        "phoneNumber": "123-456-789",
-        "street": "Bytomska",
-        "surname": "Kowalski",
-        "zipCode": "41-103"
-      },
-    "dishes": [
-      {
-        "descritpion": "",
-        "id": 1,
-        "ingredients": [
-          "ciasto",
-          "sos",
-          "ser"
-        ],
-        "name": "Margarita 60cm",
-        "price": 29.99
-      },
-      {
-        "descritpion": "",
-        "id": 2,
-        "ingredients": [
-          "ciasto",
-          "sos",
-          "ser"
-        ],
-        "name": "Margarita 43cm",
-        "price": 29.99
-      },
-      {
-        "descritpion": "",
-        "id": 3,
-        "ingredients": [
-          "ciasto",
-          "sos",
-          "ser",
-          "pieczarki",
-          "szynka"
-        ],
-        "name": "Capriciosa 45cm",
-        "price": 35
-      }
-    ],
-    "realized": 0
-  }`)];
-  constructor() { }
+  private readonly defaultLabel = 'Pokaz wszystkie';
+  orders: Order[] = [];
+  buttonLabel: string;
+  filtered = true;
+
+  constructor(private router: Router,
+              private orderHistoryService: OrderHistoryService) { }
 
   ngOnInit() {
+    this.buttonLabel = this.defaultLabel;
+    this.getOrders();
+  }
+
+  filterChanged() {
+    this.filtered = !this.filtered;
+
+    if (this.filtered) {
+      this.buttonLabel = this.defaultLabel;
+      this.getOrders();
+    } else {
+      this.buttonLabel = 'Ukryj zrealizowane';
+      this.getOrders();
+    }
+  }
+
+  private getOrders() {
+    this.orderHistoryService.getOrders(this.filtered).subscribe(res => {
+      this.orders = res;
+    });
+  }
+
+  redirectToDetails(id: number) {
+    this.router.navigate(['orderStatus/' +  id]);
+  }
+
+  realizeOrder(id: number) {
+    this.orderHistoryService.realizeOrder(id).subscribe(value => {
+      this.orderHistoryService.getOrders(this.filtered, true).subscribe(res => {
+        this.orders = res;
+      });
+      this.orderHistoryService.getOrders(!this.filtered, true).subscribe();
+    });
+  }
+
+  deleteOrder(id: number) {
+    this.orderHistoryService.deleteOrder(id).subscribe(value => {
+      this.orderHistoryService.getOrders(this.filtered, true).subscribe(res => {
+        this.orders = res;
+      });
+      this.orderHistoryService.getOrders(!this.filtered, true).subscribe();
+    });
   }
 
 }
