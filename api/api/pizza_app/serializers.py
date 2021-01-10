@@ -23,7 +23,7 @@ class DishSerializer(serializers.ModelSerializer):
 class OrderCredentialsSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderCredentials
-        fields = ('id', 'name', 'surname', 'street', 'houseNumber', 'flatNumber', 'phoneNumber', 'email')
+        fields = ('id', 'name', 'surname', 'street', 'houseNumber', 'flatNumber', 'phoneNumber', 'email', 'city', 'zipCode')
 
 
 class OrderSerializer(serializers.ModelSerializer):
