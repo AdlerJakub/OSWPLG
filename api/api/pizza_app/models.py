@@ -22,6 +22,7 @@ class OrderCredentials(models.Model):
     street = models.CharField(max_length=255)
     houseNumber = models.CharField(max_length=255)
     flatNumber = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
     phoneNumber = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     zipCode = models.CharField(max_length=255)
