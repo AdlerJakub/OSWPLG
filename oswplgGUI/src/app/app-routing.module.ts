@@ -15,6 +15,7 @@ import {OrderCredentialsComponent} from './order-credentials/order-credentials.c
 import {OrderSummaryComponent} from './order-summary/order-summary.component';
 import {OrderStatusComponent} from './order-status/order-status.component';
 import {OrderHistoryComponent} from './order-history/order-history.component';
+import {OrderStatusResolverService} from './order-status/order-status-resolver.service';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/dishes-list', pathMatch: 'full' },
@@ -31,7 +32,7 @@ const appRoutes: Routes = [
       {
         path: ':id',
         component: OrderStatusComponent,
-        resolve: [DishesResolverService]
+        resolve: [OrderStatusResolverService]
       }
     ]
   },

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {OrderCredentialsModel} from '../order-credentials/order-credentials.model';
 import {Dish} from '../dishes-list/dish.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {OrderStatusService} from './order-status.service';
 
 @Component({
@@ -15,27 +15,22 @@ export class OrderStatusComponent implements OnInit {
   private cartContent: Dish[];
   private realized: boolean;
   credentialsForm: FormGroup;
-  private id: number;
 
   constructor(
-    private route: ActivatedRoute,
-    private orderStatus: OrderStatusService,
+    private orderStatusService: OrderStatusService,
     private router: Router) {
   }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
-      this.id = +params.id;
-      this.orderStatus.getOrder(this.id).subscribe((order) => {
-        this.orderCredentials = order.credentials;
-        this.cartContent = order.dishes;
-        this.realized = order.realized === 1 ? true : false;
-        if (!this.orderCredentials || !this.cartContent) {
+      const order = this.orderStatusService.getLastOrder();
+      this.orderCredentials = order.credentials;
+      this.cartContent = order.dishes;
+      this.realized = order.realized === 1 ? true : false;
+      if (!this.orderCredentials || !this.cartContent) {
           this.router.navigate(['dishes-list']);
-        }
-        this.initForm(this.orderCredentials);
-      });
-    });
+      }
+      this.initForm(this.orderCredentials);
+
   }
 
   private initForm(credentials: OrderCredentialsModel) {

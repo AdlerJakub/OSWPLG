@@ -5,4 +5,5 @@ export class Order {
   dishes: Dish[];
   credentials: OrderCredentialsModel;
   realized = 0; // 0 to false, 1 to true
+  id: number;
 }

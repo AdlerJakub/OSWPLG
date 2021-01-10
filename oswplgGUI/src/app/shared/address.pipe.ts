@@ -7,7 +7,7 @@ import {OrderCredentialsModel} from '../order-credentials/order-credentials.mode
 export class AddressPipe implements PipeTransform {
 
   transform(value: OrderCredentialsModel, ...args: any[]): string {
-    return value.street + ' ' + value.houseNumber + (value.flatNumber ? '/' + value.flatNumber : '') +
+    return value.street + ' ' + value.houseNumber + (value.flatNumber && value.flatNumber !== '0' ? '/' + value.flatNumber : '') +
       ', ' + value.city;
   }
 
